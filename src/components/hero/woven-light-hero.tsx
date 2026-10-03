@@ -36,6 +36,17 @@ export const WovenLightHero = () => (
             {i < words.length - 1 && <span>&nbsp;</span>}
           </span>
         ))}
+        <motion.span
+          aria-hidden
+          className="ml-1.5 mb-2 inline-block size-3 rounded-full bg-coral align-bottom md:ml-3.5 md:mb-4 md:size-6"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: headline.length * 0.1 + 1.5,
+            duration: 1.2,
+            ease: [0.2, 0.65, 0.3, 0.9],
+          }}
+        />
       </h1>
       <motion.p
         initial={{ opacity: 0, y: 30 }}

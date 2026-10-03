@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Inter, Bricolage_Grotesque } from "next/font/google";
+import { CinematicFooter } from "@/components/footer/cinematic-footer";
 import { Header } from "@/components/layout/header";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
         <Header />
         {children}
+        <CinematicFooter />
       </body>
     </html>
   );
