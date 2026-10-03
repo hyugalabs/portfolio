@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-const PARTICLES = 15000;
 const MOUSE_RADIUS = 1.5;
+const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
 
 export default function WovenCanvas() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -14,27 +14,29 @@ export default function WovenCanvas() {
     if (!mount) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000);
     camera.position.z = 5;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
 
+    // One particle per knot vertex. The old 15k count wrapped the ~6.6k vertices, so extra
+    // particles sat exactly on top of earlier ones (same start, same forces) and were never seen.
+    const knot = new THREE.TorusKnotGeometry(1.5, 0.5, 200, 32);
+    const knotPos = knot.attributes.position;
+    const PARTICLES = knotPos.count;
     const positions = new Float32Array(PARTICLES * 3);
     const origins = new Float32Array(PARTICLES * 3);
     const colors = new Float32Array(PARTICLES * 3);
     const velocities = new Float32Array(PARTICLES * 3);
 
-    const knot = new THREE.TorusKnotGeometry(1.5, 0.5, 200, 32);
-    const knotPos = knot.attributes.position;
     const color = new THREE.Color();
     for (let i = 0; i < PARTICLES; i++) {
-      const v = i % knotPos.count;
       const k = i * 3;
-      origins[k] = positions[k] = knotPos.getX(v);
-      origins[k + 1] = positions[k + 1] = knotPos.getY(v);
-      origins[k + 2] = positions[k + 2] = knotPos.getZ(v);
+      origins[k] = positions[k] = knotPos.getX(i);
+      origins[k + 1] = positions[k + 1] = knotPos.getY(i);
+      origins[k + 2] = positions[k + 2] = knotPos.getZ(i);
       color.setHSL(Math.random(), 0.8, 0.5);
       colors[k] = color.r;
       colors[k + 1] = color.g;
@@ -76,8 +78,9 @@ export default function WovenCanvas() {
 
         const dx = px - mx;
         const dy = py - my;
-        const dist = Math.sqrt(dx * dx + dy * dy + pz * pz);
-        if (dist < MOUSE_RADIUS) {
+        const distSq = dx * dx + dy * dy + pz * pz;
+        if (distSq < MOUSE_RADIUS_SQ) {
+          const dist = Math.sqrt(distSq);
           const f = ((MOUSE_RADIUS - dist) * 0.01) / dist;
           vx += dx * f;
           vy += dy * f;
@@ -100,18 +103,27 @@ export default function WovenCanvas() {
       points.rotation.y = ((performance.now() - start) / 1000) * 0.05;
       renderer.render(scene, camera);
     };
-    animate();
 
-    const onResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+    // Only run the loop while the hero is on screen.
+    const visibility = new IntersectionObserver(([entry]) => {
+      cancelAnimationFrame(raf);
+      if (entry.isIntersecting) animate();
+    });
+    visibility.observe(mount);
+
+    // Size to the hero (h-svh), not the window, so mobile toolbars showing and
+    // hiding mid-scroll don't reallocate the canvas.
+    const resize = new ResizeObserver(() => {
+      camera.aspect = mount.clientWidth / mount.clientHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    window.addEventListener("resize", onResize);
+      renderer.setSize(mount.clientWidth, mount.clientHeight);
+    });
+    resize.observe(mount);
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
+      visibility.disconnect();
+      resize.disconnect();
       window.removeEventListener("mousemove", onMouseMove);
       geometry.dispose();
       material.dispose();

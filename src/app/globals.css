@@ -3,6 +3,7 @@
 /* 60-30-10: charcoal (60), off-white (30), coral (10) + teal for tiny highlights */
 @theme {
   --color-charcoal: #1e1e20;
+  --color-charcoal-raised: #252528;
   --color-offwhite: #f3f2ef;
   --color-coral: #ff3b63;
   --color-teal: #14b8a6;
@@ -44,6 +45,7 @@ html {
 
 .animate-footer-breathe { animation: footer-breathe 8s ease-in-out infinite alternate; }
 .animate-footer-marquee { animation: footer-marquee 40s linear infinite; }
+[data-paused] :is(.animate-footer-breathe, .animate-footer-marquee) { animation-play-state: paused; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-footer-breathe, .animate-footer-marquee { animation: none; }
@@ -90,6 +92,16 @@ html {
   background: linear-gradient(180deg, rgb(243 242 239 / 0.1) 0%, transparent 60%);
   -webkit-background-clip: text;
   background-clip: text;
+}
+
+/* On phones the faint desktop fill disappears, so strengthen it */
+@media (max-width: 767px) {
+  .footer-giant-text {
+    -webkit-text-stroke: 1px rgb(243 242 239 / 0.18);
+    background: linear-gradient(180deg, rgb(243 242 239 / 0.28) 0%, rgb(243 242 239 / 0.04) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
 }
 
 .footer-glow {
