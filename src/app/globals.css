@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* 60-30-10: charcoal (60), off-white (30), coral (10) + teal for tiny highlights */
+@theme {
+  --color-charcoal: #1e1e20;
+  --color-offwhite: #f3f2ef;
+  --color-coral: #ff3b63;
+  --color-teal: #14b8a6;
+
+  --font-headline: var(--font-geist-sans), system-ui, sans-serif;
+  --font-sub: var(--font-inter), system-ui, sans-serif;
+  --font-accent: var(--font-bricolage), system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-charcoal);
+  color: var(--color-offwhite);
+  font-family: var(--font-sub);
+}
+
+::selection {
+  background: var(--color-coral);
+  color: var(--color-charcoal);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 3px;
+}
+
+html {
+  scrollbar-color: rgb(243 242 239 / 0.2) var(--color-charcoal);
+}
