@@ -79,7 +79,7 @@ export function NotFoundGlitch() {
           href="/components"
           className="inline-block rounded-full px-7 py-3 font-semibold text-offwhite ring-1 ring-offwhite/15 transition-[background-color,transform] hover:bg-offwhite/[0.06] active:scale-[0.97]"
         >
-          See our work
+          Our Work
         </Link>
       </div>
     </section>

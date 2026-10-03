@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 import { sites } from "@/data/sites";
 import { siteConfig } from "@/lib/site-config";
+import { RollText } from "./roll-text";
 
 const links = [
   { href: "/", label: "Home" },
@@ -46,27 +47,6 @@ const grow: Variants = {
     transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: REVEAL_DELAY + 0.1 + i * 0.05 },
   }),
 };
-
-/* Each character sits above a text-shadow copy of itself; on hover the real
-   one slides up and the copy slides into place, staggered per character. */
-function RollText({ text }: { text: string }) {
-  return (
-    <>
-      <span className="sr-only">{text}</span>
-      <span aria-hidden className="relative inline-block overflow-hidden align-bottom leading-[1.08]">
-        {[...text].map((char, i) => (
-          <span
-            key={i}
-            className="relative inline-block whitespace-pre transition-transform duration-500 ease-[cubic-bezier(0.625,0.05,0,1)] group-hover:-translate-y-[1.2em] group-focus-visible:-translate-y-[1.2em] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-focus-visible:translate-y-0"
-            style={{ textShadow: "0 1.2em var(--color-coral)", transitionDelay: `${i * 0.015}s` }}
-          >
-            {char}
-          </span>
-        ))}
-      </span>
-    </>
-  );
-}
 
 export function Header() {
   const [open, setOpen] = useState(false);

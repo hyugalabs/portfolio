@@ -7,6 +7,7 @@ import {
   useMotionValue,
   useScroll,
   useSpring,
+  useInView,
   useTransform,
 } from "motion/react";
 import { siteConfig } from "@/lib/site-config";
@@ -14,7 +15,7 @@ import { siteConfig } from "@/lib/site-config";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
-  { href: "/components", label: "Components" },
+  { href: "/components", label: "Our Work" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -77,6 +78,8 @@ const svgProps = {
 
 export function CinematicFooter() {
   const ref = useRef<HTMLDivElement>(null);
+  // The footer is fixed behind the page, so pause its looping animations until it's revealed.
+  const inView = useInView(ref, { margin: "200px 0px" });
   const { scrollYProgress: bgProgress } = useScroll({
     target: ref,
     offset: ["start 80%", "end end"],
@@ -101,7 +104,10 @@ export function CinematicFooter() {
       className="relative h-svh w-full"
       style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
     >
-      <footer className="fixed bottom-0 left-0 flex h-svh w-full flex-col justify-between overflow-hidden bg-charcoal text-offwhite">
+      <footer
+        data-paused={inView ? undefined : ""}
+        className="fixed bottom-0 left-0 flex h-svh w-full flex-col justify-between overflow-hidden bg-charcoal text-offwhite"
+      >
         <div
           aria-hidden
           className="footer-aurora animate-footer-breathe pointer-events-none absolute left-1/2 top-1/2 z-0 h-[60vh] w-[80vw] rounded-[50%] blur-[80px]"
@@ -110,7 +116,7 @@ export function CinematicFooter() {
         <motion.div
           aria-hidden
           style={{ y: bgY, scale: bgScale, opacity: bgOpacity, x: "-50%" }}
-          className="footer-giant-text pointer-events-none absolute -bottom-[5vh] left-1/2 z-0 select-none whitespace-nowrap font-headline"
+          className="footer-giant-text pointer-events-none absolute bottom-[14vh] left-1/2 md:-bottom-[5vh] z-0 select-none whitespace-nowrap font-headline"
         >
           HYUGA
         </motion.div>
