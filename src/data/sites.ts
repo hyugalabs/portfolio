@@ -43,4 +43,11 @@ export const sites: Site[] = [
     features: ["Story submissions", "Live stats", "Light and dark mode"],
     href: "https://www.biyerkahini.online/",
   },
+  {
+    name: "Dry Masters Carpet Systems",
+    description: "Low-moisture, steam-free carpet cleaning in Canton, Ohio, with reviews and a blog.",
+    image: "/images/sites/drymasters.png",
+    features: ["Services", "Google reviews", "Blog"],
+    href: "https://drymasterscarpetsystemsllc.vercel.app/",
+  },
 ];
