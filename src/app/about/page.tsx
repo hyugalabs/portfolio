@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Blobatar } from "@blobatar/react";
+import "blobatar/motion.css";
 import { BuildTrack } from "@/components/about/build-track";
+import { ArrowUpRight } from "@/components/icons/arrow-up-right";
 import { team } from "@/data/team";
 
 export const metadata: Metadata = {
@@ -13,12 +16,20 @@ export const metadata: Metadata = {
 
 const strong = "text-offwhite";
 
-const initials = (name: string) =>
-  name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2);
+function MemberLink({ name, href, className }: { name: string; href: string; className: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group inline-flex items-center gap-1.5 font-headline font-semibold tracking-[-0.02em] transition-colors hover:text-coral ${className}`}
+    >
+      {name}
+      <ArrowUpRight className="size-4 shrink-0 text-offwhite/50 transition-[color,transform] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-coral" />
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  );
+}
 
 function Role({ role }: { role: string }) {
   return (
@@ -72,7 +83,9 @@ export default function AboutPage() {
                     className="object-cover"
                   />
                 </div>
-                <p className="mt-4 font-headline text-lg font-semibold tracking-[-0.02em] sm:text-xl">{member.name}</p>
+                <p className="mt-4">
+                  <MemberLink name={member.name} href={member.href} className="text-lg sm:text-xl" />
+                </p>
                 <Role role={member.role} />
               </li>
             ))}
@@ -81,11 +94,15 @@ export default function AboutPage() {
           <ul className="mt-12 grid border-t border-offwhite/10 sm:grid-cols-3 sm:gap-x-8 sm:border-t-0">
             {team.map((member, i) => (
               <li key={i} className="flex items-center gap-5 border-b border-offwhite/10 py-5 sm:border-b-0 sm:border-t sm:py-7">
-                <span aria-hidden className="grid size-16 shrink-0 place-items-center rounded-full bg-charcoal-raised font-headline text-xl font-semibold tracking-[-0.02em] text-offwhite/60 ring-1 ring-offwhite/10 sm:size-20 sm:text-2xl">
-                  {initials(member.name)}
-                </span>
+                <Blobatar
+                  name={member.name}
+                  animate="hover"
+                  traits={{ shape: 0.11 }} /* always the round silhouette */
+                  aria-hidden
+                  className="size-16 shrink-0 sm:size-20"
+                />
                 <span>
-                  <span className="block font-headline text-lg font-semibold tracking-[-0.02em] sm:text-xl">{member.name}</span>
+                  <MemberLink name={member.name} href={member.href} className="text-lg sm:text-xl" />
                   <Role role={member.role} />
                 </span>
               </li>
