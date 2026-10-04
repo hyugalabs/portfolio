@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, useTransition, type FormEvent } from "react";
 import { siteConfig } from "@/lib/site-config";
+import { sendContact } from "@/app/contact/actions";
 
 const needs = ["New website", "Booking or quotes", "SEO", "Social content", "Not sure yet"];
 
@@ -9,24 +10,10 @@ const field =
   "w-full rounded-xl bg-transparent px-4 py-3 text-base text-offwhite caret-coral ring-1 ring-offwhite/15 transition-shadow placeholder:text-offwhite/55 hover:ring-offwhite/25 focus:outline-none focus:ring-2 focus:ring-coral user-invalid:ring-coral/70";
 const label = "mb-2 block text-sm font-medium text-offwhite/75";
 
-// Placeholder delivery: opens the visitor's mail app with the message filled in.
-// Swap this for a real backend once one is chosen.
-function sendMessage(data: FormData) {
-  const name = String(data.get("name"));
-  const lines = [
-    `Name: ${name}`,
-    `Business: ${data.get("business") || "-"}`,
-    `Email: ${data.get("email")}`,
-    `Looking for: ${data.getAll("needs").join(", ") || "-"}`,
-    "",
-    String(data.get("message")),
-  ];
-  const subject = encodeURIComponent(`New project enquiry from ${name}`);
-  window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${encodeURIComponent(lines.join("\n"))}`;
-}
-
 export function ContactForm() {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 
   // Pre-select the needs picked on /services (?need=SEO&need=...).
@@ -40,25 +27,23 @@ export function ContactForm() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendMessage(new FormData(e.currentTarget));
-    setSent(true);
+    const data = new FormData(e.currentTarget);
+    setError(null);
+    startTransition(async () => {
+      const result = await sendContact(data);
+      if (result.ok) setSent(true);
+      else setError(result.error);
+    });
   };
 
   if (sent) {
     return (
       <div role="status" className="flex min-h-[28rem] flex-col justify-center">
         <p className="font-headline text-3xl font-bold tracking-[-0.03em] sm:text-4xl">
-          Almost there<span className="text-coral">.</span>
+          Message sent<span className="text-coral">.</span>
         </p>
         <p className="mt-4 max-w-sm leading-relaxed text-offwhite/75">
-          Your email app should have opened with your message ready. Hit send there and it reaches us.
-        </p>
-        <p className="mt-6 text-sm text-offwhite/60">
-          Nothing opened? Email{" "}
-          <a href={`mailto:${siteConfig.email}`} className="text-offwhite underline decoration-coral underline-offset-4">
-            {siteConfig.email}
-          </a>
-          .
+          Thanks for reaching out. We&apos;ll get back to you at the email you gave us.
         </p>
         <button
           type="button"
@@ -117,11 +102,21 @@ export function ContactForm() {
         />
       </div>
 
+      {error && (
+        <p role="alert" className="text-sm text-coral">
+          {error}{" "}
+          <a href={`mailto:${siteConfig.email}`} className="text-offwhite underline decoration-coral underline-offset-4">
+            {siteConfig.email}
+          </a>
+        </p>
+      )}
+
       <button
         type="submit"
-        className="group mt-1 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-coral px-8 py-3.5 font-semibold text-charcoal transition-[opacity,transform] hover:opacity-90 active:scale-[0.98] sm:w-fit"
+        disabled={pending}
+        className="group disabled:cursor-wait disabled:opacity-60 mt-1 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-coral px-8 py-3.5 font-semibold text-charcoal transition-[opacity,transform] hover:opacity-90 active:scale-[0.98] sm:w-fit"
       >
-        Send message
+        {pending ? "Sending..." : "Send message"}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5">
           <path d="M5 12h14M13 6l6 6-6 6" />
         </svg>
