@@ -84,7 +84,25 @@ export function Header() {
     };
   }, [open]);
 
-  const ink = open ? "text-charcoal" : "text-offwhite";
+  // Ink goes dark while the header sits over an off-white band (`data-header-light`).
+  const [onLight, setOnLight] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      const y = 36;
+      setOnLight(
+        [...document.querySelectorAll("[data-header-light]")].some((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top <= y && r.bottom >= y;
+        }),
+      );
+    };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, [pathname]);
+
+  const dark = open || onLight;
+  const ink = dark ? "text-charcoal" : "text-offwhite";
   const inkDelay = open ? "delay-500" : "delay-300";
 
   return (
@@ -93,8 +111,8 @@ export function Header() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-1" aria-label={`${siteConfig.name} home`}>
             <span className="relative size-12">
-              <Image src="/images/logos/only logo 1024x1024 dark mode.svg" alt="" fill preload className={`transition-opacity duration-300 ${inkDelay} ${open ? "opacity-0" : ""}`} />
-              <Image src="/images/logos/only logo 1024x1024 transparent.svg" alt="" fill className={`transition-opacity duration-300 ${inkDelay} ${open ? "" : "opacity-0"}`} />
+              <Image src="/images/logos/only logo 1024x1024 dark mode.svg" alt="" fill preload className={`transition-opacity duration-300 ${inkDelay} ${dark ? "opacity-0" : ""}`} />
+              <Image src="/images/logos/only logo 1024x1024 transparent.svg" alt="" fill className={`transition-opacity duration-300 ${inkDelay} ${dark ? "" : "opacity-0"}`} />
             </span>
             <span className={`font-headline text-lg font-semibold transition-colors duration-300 ${inkDelay} ${ink}`}>
               Hyuga Labs<span aria-hidden className="ml-1 inline-block size-1.5 rounded-full bg-coral align-baseline" />
