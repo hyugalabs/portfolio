@@ -1,74 +1,65 @@
 "use client";
 
+import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "motion/react";
 
 const WovenCanvas = dynamic(() => import("./woven-canvas"), { ssr: false });
 
-const headline = "Hyuga Labs";
-const words = headline.split(" ");
+const words = ["Websites", "built", "around", "how", "your", "business", "works"];
+const ease = [0.2, 0.65, 0.3, 0.9] as const;
+const copyDelay = words.length * 0.08 + 0.3;
 
 export const WovenLightHero = () => (
-  <section className="relative flex h-svh w-full flex-col items-center justify-center overflow-hidden bg-charcoal">
+  <section className="relative flex h-[calc(100svh-4.5rem)] min-h-[34rem] w-full flex-col items-center justify-center overflow-hidden bg-charcoal">
     <WovenCanvas />
-    <div className="relative z-10 px-4 text-center">
+    <div className="relative z-10 px-5 text-center">
       {/* Soft charcoal glow keeps the copy readable over the particles */}
       <div aria-hidden className="pointer-events-none absolute -inset-x-6 -inset-y-10 -z-10 rounded-full bg-charcoal/75 blur-3xl" />
-      <h1 className="font-headline text-5xl font-bold text-offwhite sm:text-6xl md:text-8xl">
+      <h1 className="font-headline mx-auto max-w-4xl text-4xl font-bold tracking-[-0.03em] text-balance text-offwhite sm:text-6xl md:text-7xl">
         {words.map((word, i) => (
-          <span key={i} className="inline-block whitespace-nowrap">
-            {word.split("").map((char, j) => (
-              <motion.span
-                key={j}
-                className="inline-block"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: (i * 5 + j) * 0.1 + 1.5,
-                  duration: 1.2,
-                  ease: [0.2, 0.65, 0.3, 0.9],
-                }}
-              >
-                {char}
-              </motion.span>
-            ))}
-            {i < words.length - 1 && <span>&nbsp;</span>}
-            {i === words.length - 1 && (
-              <motion.span
-                aria-hidden
-                className="ml-[0.12em] mb-[0.08em] inline-block size-[0.2em] rounded-full bg-coral align-baseline"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: headline.length * 0.1 + 1.5,
-                  duration: 1.2,
-                  ease: [0.2, 0.65, 0.3, 0.9],
-                }}
-              />
-            )}
-          </span>
+          <Fragment key={i}>
+            <motion.span
+              className="inline-block whitespace-nowrap"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 + 0.3, duration: 0.9, ease }}
+            >
+              {word}
+              {i === words.length - 1 && (
+                <span aria-hidden className="ml-[0.08em] inline-block size-[0.16em] rounded-full bg-coral" />
+              )}
+            </motion.span>
+            {i < words.length - 1 && " "}
+          </Fragment>
         ))}
       </h1>
       <motion.p
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: headline.length * 0.1 + 1.5, duration: 1.2, ease: [0.2, 0.65, 0.3, 0.9] }}
+        transition={{ delay: copyDelay, duration: 0.9, ease }}
         className="font-sub mx-auto mt-6 max-w-xl text-lg text-offwhite/85"
       >
-        We build custom websites for small businesses, and help you grow your presence with SEO and social content.
+        Hyuga Labs builds custom websites for small businesses, then helps people find them with SEO and social content.
       </motion.p>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.5, duration: 1 }}
-        className="mt-10"
+        transition={{ delay: copyDelay + 0.2, duration: 0.8 }}
+        className="font-sub mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-4"
       >
         <Link
           href="/components"
-          className="font-sub inline-block rounded-full bg-coral px-8 py-3 font-semibold text-charcoal transition-opacity hover:opacity-90"
+          className="inline-block rounded-full bg-coral px-8 py-3 font-semibold text-charcoal transition-opacity hover:opacity-90"
         >
-          Our Work
+          See sites we&rsquo;ve built
+        </Link>
+        <Link
+          href="/contact"
+          className="font-medium text-offwhite underline decoration-offwhite/30 underline-offset-[6px] transition-colors hover:decoration-coral"
+        >
+          Talk to us
         </Link>
       </motion.div>
     </div>
