@@ -158,7 +158,7 @@ export function CinematicFooter() {
                   <svg {...svgProps} className="h-5 w-5 text-offwhite/60">
                     <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
                   </svg>
-                  {siteConfig.phone}
+                  {siteConfig.phoneDisplay}
                 </a>
               </Magnetic>
             </div>
@@ -177,7 +177,10 @@ export function CinematicFooter() {
 
         <div className="relative z-20 flex w-full flex-col items-center justify-between gap-6 px-6 pb-8 md:flex-row md:px-12">
           <p className="order-3 text-[10px] font-semibold uppercase tracking-widest text-offwhite/60 md:order-1 md:text-xs">
-            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.{" "}
+            <Link href="/privacy" className="underline-offset-4 hover:text-offwhite hover:underline">Privacy</Link>
+            {" · "}
+            <Link href="/terms" className="underline-offset-4 hover:text-offwhite hover:underline">Terms</Link>
           </p>
           <ul className="order-1 flex gap-3 md:order-2">
             {siteConfig.socials.map(({ label, href }) => (

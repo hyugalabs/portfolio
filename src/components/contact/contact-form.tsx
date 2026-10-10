@@ -15,6 +15,11 @@ export function ContactForm() {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
+  const openedAt = useRef(0);
+
+  useEffect(() => {
+    openedAt.current = Date.now();
+  }, []);
 
   // Pre-select the needs picked on /services (?need=SEO&need=...).
   useEffect(() => {
@@ -28,6 +33,7 @@ export function ContactForm() {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    data.set("openedAt", String(openedAt.current));
     setError(null);
     startTransition(async () => {
       const result = await sendContact(data);
@@ -61,19 +67,25 @@ export function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="name" className={label}>Your name</label>
-          <input id="name" name="name" required autoComplete="name" className={field} />
+          <input id="name" name="name" type="text" required autoComplete="name" className={field} />
         </div>
         <div>
           <label htmlFor="business" className={label}>
             Business <span className="text-offwhite/60">(optional)</span>
           </label>
-          <input id="business" name="business" autoComplete="organization" className={field} />
+          <input id="business" name="business" type="text" autoComplete="organization" className={field} />
         </div>
       </div>
 
       <div>
         <label htmlFor="email" className={label}>Email</label>
         <input id="email" name="email" type="email" required autoComplete="email" inputMode="email" className={field} />
+      </div>
+
+      {/* Honeypot: invisible to people and screen readers, bots fill it in */}
+      <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor="website">Leave this field empty</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
       <fieldset>

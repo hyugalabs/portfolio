@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { Blobatar } from "@blobatar/react";
@@ -7,12 +8,12 @@ import { BuildTrack } from "@/components/about/build-track";
 import { ArrowUpRight } from "@/components/icons/arrow-up-right";
 import { team } from "@/data/team";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
   description:
     "Hyuga Labs is a small remote team building custom websites for small businesses. Here's how we build, start to finish, shown on the live sites we've made.",
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 const strong = "text-offwhite";
 

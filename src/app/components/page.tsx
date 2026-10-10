@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { SiteCard } from "@/components/sites/site-card";
 import { sites } from "@/data/sites";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Our Work",
   description:
     "Live websites Hyuga Labs designed and built for small businesses: booking, quote forms, click-to-call and more.",
-  alternates: { canonical: "/components" },
-};
+  path: "/components",
+});
 
 export default function ComponentsPage() {
   return (

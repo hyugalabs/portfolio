@@ -27,6 +27,12 @@ export function Closing() {
           >
             {siteConfig.email}
           </a>
+          <a
+            href={`tel:${siteConfig.phone}`}
+            className="font-medium tabular-nums underline decoration-offwhite/30 underline-offset-[6px] transition-colors hover:decoration-coral"
+          >
+            {siteConfig.phoneDisplay}
+          </a>
         </div>
       </div>
     </section>
