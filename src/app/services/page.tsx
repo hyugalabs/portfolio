@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ServiceBuilder } from "@/components/services/service-builder";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Services",
   description:
     "Custom websites, online booking and quote forms, SEO and social content for small businesses, with the live sites where we've built each one.",
-  alternates: { canonical: "/services" },
-};
+  path: "/services",
+});
 
 const strong = "text-offwhite";
 

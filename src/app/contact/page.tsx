@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ContactForm } from "@/components/contact/contact-form";
 import { GlobeHorizon } from "@/components/contact/globe-horizon";
 import { ArrowUpRight } from "@/components/icons/arrow-up-right";
 import { siteConfig } from "@/lib/site-config";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description:
     "Tell Hyuga Labs about your business. We work remotely with small businesses anywhere on custom websites, SEO and social content.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 const steps = [
   {
@@ -91,7 +92,7 @@ export default function ContactPage() {
               <a href={`tel:${siteConfig.phone}`} className={channel}>
                 <span>
                   <span className="block text-sm text-offwhite/55 group-hover:text-coral/80">Call</span>
-                  <span className="mt-1 block font-headline text-lg font-medium tabular-nums sm:text-xl">{siteConfig.phone}</span>
+                  <span className="mt-1 block font-headline text-lg font-medium tabular-nums sm:text-xl">{siteConfig.phoneDisplay}</span>
                 </span>
                 <ArrowUpRight className="size-5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </a>

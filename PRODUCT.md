@@ -18,7 +18,7 @@ Custom-built sites shaped around how the client's business actually works (quote
 ## Operating Context
 - The team works remotely with clients anywhere. Do not name a city or country (confirmed 2026-10-03).
 - Clients so far are US small businesses (Ohio, New York) plus one community site.
-- Contact channels: email `hyugalabs@gmail.com`, phone `+8801577700128`, Instagram, Facebook and LinkedIn (`src/lib/site-config.ts`).
+- Contact channels: email `info@hyugalabs.com` (hyugalabs@gmail.com only sends contact-form mail via env), phone `+1 313-552-8649` (US number, shown on the site for Free Caller Registry), Instagram, Facebook and LinkedIn (`src/lib/site-config.ts`).
 
 ## Capabilities and Constraints
 - Next.js 16 App Router, Tailwind v4, `motion`, `three`. Keep the dependency list lean and the site fast on phones.

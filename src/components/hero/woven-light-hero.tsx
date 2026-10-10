@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { siteConfig } from "@/lib/site-config";
 
 const WovenCanvas = dynamic(() => import("./woven-canvas"), { ssr: false });
 
@@ -55,12 +56,12 @@ export const WovenLightHero = () => (
         >
           See sites we&rsquo;ve built
         </Link>
-        <Link
-          href="/contact"
-          className="font-medium text-offwhite underline decoration-offwhite/30 underline-offset-[6px] transition-colors hover:decoration-coral"
+        <a
+          href={`tel:${siteConfig.phone}`}
+          className="font-medium tabular-nums text-offwhite underline decoration-offwhite/30 underline-offset-[6px] transition-colors hover:decoration-coral"
         >
-          Talk to us
-        </Link>
+          Call {siteConfig.phoneDisplay}
+        </a>
       </motion.div>
     </div>
   </section>

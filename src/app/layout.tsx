@@ -24,9 +24,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: { default: siteConfig.title, template: `%s | ${siteConfig.name}` },
   description: siteConfig.description,
+  applicationName: siteConfig.name,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
+    locale: "en_US",
+    url: "/",
     title: siteConfig.title,
     description: siteConfig.description,
   },
@@ -44,6 +48,17 @@ const organizationJsonLd = {
   url: siteConfig.url,
   logo: siteConfig.url + siteConfig.logo,
   description: siteConfig.description,
+  email: siteConfig.email,
+  telephone: siteConfig.phone,
+  sameAs: siteConfig.socials.map((s) => s.href),
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: siteConfig.phone,
+    email: siteConfig.email,
+    contactType: "sales",
+    areaServed: "US",
+    availableLanguage: "English",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
